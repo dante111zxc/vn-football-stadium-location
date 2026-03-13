@@ -1,0 +1,2 @@
+- Interface viết vào thư mục interfaces
+- Hằng số lưu vào file config/constants.ts
