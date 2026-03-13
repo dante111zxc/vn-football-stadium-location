@@ -79,10 +79,7 @@ export const SEARCH_QUERIES = [
 export const OUTPUT_STADIUMS_PATH = 'output/stadiums.json'
 
 export const ZOOM_LEVEL = 11
-/** Số request đồng thời - giảm xuống 1 để tránh "too many requests" (429) */
-export const MAX_CONCURRENT = 1
-export const DELAY_MS = 250
-/** Delay giữa mỗi page khi gọi searchAllPages (ms) - tránh 429 */
+/** Delay giữa mỗi page (ms) - tránh rate limit */
 export const DELAY_BETWEEN_PAGES_MS = 500
 
 /** GMapsExtractor API */

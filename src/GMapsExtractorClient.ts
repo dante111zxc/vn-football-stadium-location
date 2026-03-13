@@ -18,6 +18,11 @@ import type { IPlaceOutput } from './interfaces/PlaceOutputInterface.ts'
 import type { IGMapsExtractorPlace } from './interfaces/GMapsExtractorPlaceInterface.ts'
 import type { IGMapsExtractorResponse } from './interfaces/GMapsExtractorResponseInterface.ts'
 
+/** Gọi onPageReceived sau mỗi lần API trả về để updateOrCreate ngay vào file */
+export interface SearchAllPagesOptions {
+  onPageReceived?: (places: IPlaceOutput[]) => void
+}
+
 export class GMapsExtractorClient {
   private readonly token: string
   private readonly http: AxiosInstance
@@ -70,17 +75,23 @@ export class GMapsExtractorClient {
     }
 
     const places = this.extractPlacesFromResponse(response.data)
+    if (places.length === 0 && response.data && typeof response.data === 'object') {
+      const keys = Object.keys(response.data).slice(0, 8)
+      console.warn(`[Debug] API 200 nhưng 0 kết quả. Response keys: ${keys.join(', ')}`)
+    }
     return places.map((p) => this.mapPlaceToOutput(p))
   }
 
   /**
    * Gọi tất cả các trang (1-10), merge kết quả
    * Dừng sớm nếu page trả về < 20 kết quả (hết dữ liệu)
+   * Gọi onPageReceived sau mỗi lần API trả về để updateOrCreate ngay
    */
   public async searchAllPages(
     query: string,
     lat: number,
-    lng: number
+    lng: number,
+    options?: SearchAllPagesOptions
   ): Promise<IPlaceOutput[]> {
     const allPlaces: IPlaceOutput[] = []
     const seenPlaceIds = new Set<string>()
@@ -103,6 +114,8 @@ export class GMapsExtractorClient {
         }
       }
 
+      options?.onPageReceived?.(places)
+
       if (places.length < GMAPSEXTRACTOR_RESULTS_PER_PAGE) break
 
       if (page < MAX_PAGES_PER_SEARCH) {
@@ -123,6 +136,7 @@ export class GMapsExtractorClient {
     if (Array.isArray(data?.data)) return data.data
     if (Array.isArray(data?.results)) return data.results
     if (Array.isArray(data?.places)) return data.places
+    if (Array.isArray(data)) return data
     return []
   }
 

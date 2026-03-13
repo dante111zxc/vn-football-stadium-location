@@ -34,10 +34,10 @@ export class StadiumStorage {
   }
 
   /**
-   * Cập nhật file - merge places mới vào dữ liệu hiện có (dedupe theo Place Id)
-   * Log: thêm mới / cập nhật trùng
+   * updateOrCreate: Nếu place đã có trong file (theo Place Id) thì cập nhật, chưa có thì thêm mới
+   * Gọi sau mỗi lần API trả về để đồng bộ dữ liệu ngay
    */
-  public update(places: IPlaceOutput[], filePath?: string): void {
+  public updateOrCreate(places: IPlaceOutput[], filePath?: string): void {
     const path = filePath ?? this.defaultPath
     const existing = this.load(path)
     const map = new Map<string, IPlaceOutput>()
@@ -58,6 +58,11 @@ export class StadiumStorage {
       }
     }
     this.save(Array.from(map.values()), path)
+  }
+
+  /** @deprecated Dùng updateOrCreate */
+  public update(places: IPlaceOutput[], filePath?: string): void {
+    this.updateOrCreate(places, filePath)
   }
 
   /**
