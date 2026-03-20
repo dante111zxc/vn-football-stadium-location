@@ -6,7 +6,9 @@
 import { GridGenerator } from './GridGenerator.js'
 import { GMapsExtractorClient } from './GMapsExtractorClient.js'
 import { StadiumStorage } from './StadiumStorage.js'
+import { Storage } from './Storage.js'
 import {
+  DEFAULT_STORAGE_PATH,
   SEARCH_QUERIES,
   OUTPUT_STADIUMS_PATH,
   MAX_GRID_CELLS,
@@ -24,11 +26,13 @@ export class StadiumScraper {
   private readonly gridGenerator: GridGenerator
   private readonly gmapsClient: GMapsExtractorClient
   private readonly storage: StadiumStorage
+  private readonly defaultStorage: Storage
 
   constructor(options: StadiumScraperOptions = {}) {
     this.gridGenerator = options.gridGenerator ?? new GridGenerator()
     this.gmapsClient = options.gmapsClient ?? new GMapsExtractorClient()
     this.storage = options.storage ?? new StadiumStorage()
+    this.defaultStorage = new Storage()
   }
 
   /**
@@ -79,12 +83,17 @@ export class StadiumScraper {
     provinceNames: string[]
   ): Promise<IPlaceOutput[]> {
     const gridCells: ReturnType<GridGenerator['generateProvinceGrid']> = []
+
     for (const name of provinceNames) {
       const bounds = PROVINCE_BOUNDS[name]
+
       if (!bounds) {
-        console.warn(`[Warning] No bounds for province "${name}", skipping.`)
+        console.warn(
+          `[Warning] Không tìm thấy ranh giới tỉnh thành ${name} , bỏ qua.`
+        )
         continue
       }
+
       const cells = this.gridGenerator.generateProvinceGrid(name, bounds)
       gridCells.push(...cells)
     }
@@ -95,6 +104,10 @@ export class StadiumScraper {
       )
       return []
     }
+
+    this.defaultStorage.save(gridCells, DEFAULT_STORAGE_PATH)
+    console.log(`Đã lưu ${gridCells.length} ô lưới vào ${DEFAULT_STORAGE_PATH}`)
+    console.log('Starting stadium scrape for:', provinceNames.join(', '), '\n')
 
     for (const cell of gridCells) {
       const lat = cell.center.latitude
@@ -115,6 +128,11 @@ export class StadiumScraper {
         }
       }
     }
+    console.log(
+      'Đã hoàn thành quét sân bóng cho:',
+      provinceNames.join(', '),
+      '\n'
+    )
 
     const result = this.storage.load(OUTPUT_STADIUMS_PATH)
     console.log(`\n=== Done ===`)

@@ -17,7 +17,7 @@ export class GridGenerator {
 
   constructor(options: IGridOptions = {}) {
     this.options = {
-      defaultCellSize: options.defaultCellSize ?? 20,
+      defaultCellSize: options.defaultCellSize ?? 40,
       urbanCellSize: options.urbanCellSize ?? 10,
       suburbanCellSize: options.suburbanCellSize ?? 10,
       ruralCellSize: options.ruralCellSize ?? 20,
@@ -140,9 +140,7 @@ export class GridGenerator {
   ): IGridCell[] {
     const cells: IGridCell[] = []
     const overlapFactor = 1 - this.options.overlap / 100
-
     const latStepDegrees = this.kmToLatDegrees(cellSizeKm * overlapFactor)
-
     let cellId = 0
 
     for (let lat = bounds.south; lat <= bounds.north; lat += latStepDegrees) {
