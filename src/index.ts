@@ -5,6 +5,7 @@
 
 import 'dotenv/config'
 import { StadiumScraper } from './StadiumScraper.js'
+import { StadiumCsvConverter } from './StadiumCsvConverter.js'
 
 const scraper = new StadiumScraper()
 const PROVINCES = [
@@ -73,7 +74,10 @@ const PROVINCES = [
   'Yên Bái',
 ]
 
-scraper.run().catch((err) => {
-  console.error('Fatal error:', err)
-  process.exit(1)
-})
+// scraper.run().catch((err) => {
+//   console.error('Fatal error:', err)
+//   process.exit(1)
+// })
+
+const converter = new StadiumCsvConverter()
+converter.convert()
