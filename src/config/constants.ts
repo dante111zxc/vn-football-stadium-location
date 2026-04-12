@@ -69,7 +69,7 @@ export const URBAN_CENTERS: IUrbanCenter[] = [
 ]
 
 export const GRID_STEP_KM = 15
-export const SEARCH_QUERIES = ['sân bóng đá', 'sân bóng', 'sân cỏ nhân tạo']
+export const SEARCH_QUERIES = ['sân bóng', 'sân cỏ nhân tạo']
 
 /** Đường dẫn file JSON output */
 export const OUTPUT_STADIUMS_PATH = 'output/stadiums.json'
@@ -77,26 +77,18 @@ export const DEFAULT_STORAGE_PATH = 'output/default.json'
 
 export const ZOOM_LEVEL = 11
 /** Delay giữa mỗi page (ms) - tránh rate limit */
-export const DELAY_BETWEEN_PAGES_MS = 500
+export const DELAY_BETWEEN_PAGES_MS = 300
 
 /** GMapsExtractor API */
 export const GMAPSEXTRACTOR_API_BASE_URL =
   'https://cloud.gmapsextractor.com/api/v2'
-export const GMAPSEXTRACTOR_MAX_PAGES = 10
+export const GMAPSEXTRACTOR_MAX_PAGES = 5
 export const GMAPSEXTRACTOR_RESULTS_PER_PAGE = 20
 
-/**
- * Giới hạn Free tier: 1000 requests/ngày
- * 1 request = 1 lần gọi API (1 page)
- * Công thức: MAX_GRID_CELLS × SEARCH_QUERIES.length × MAX_PAGES_PER_SEARCH ≤ MAX_DAILY_REQUESTS
- */
-export const MAX_DAILY_REQUESTS = 950
-/** Chỉ lấy page 1 mỗi ô (20 kết quả) - tiết kiệm request. Dùng 10 nếu có gói trả phí */
-export const MAX_PAGES_PER_SEARCH = 10
-/** Số ô lưới tối đa = 950 / (5 query × 1 page) = 190 ô */
-export const MAX_GRID_CELLS = Math.floor(
-  MAX_DAILY_REQUESTS / (SEARCH_QUERIES.length * MAX_PAGES_PER_SEARCH)
-)
+/** Gói API không giới hạn - không cần giới hạn số ô lưới */
+export const UNLIMITED_API = true
+/** Số page tối đa mỗi search - giảm xuống 5 vì hầu hết kết quả nằm ở trang đầu */
+export const MAX_PAGES_PER_SEARCH = 5
 
 /**
  * Ranh giới tỉnh/thành phố để crawl theo vùng

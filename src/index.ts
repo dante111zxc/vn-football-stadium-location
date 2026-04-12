@@ -73,7 +73,7 @@ const PROVINCES = [
   'Yên Bái',
 ]
 
-scraper.runForProvinces(PROVINCES).catch((err) => {
+scraper.run().catch((err) => {
   console.error('Fatal error:', err)
   process.exit(1)
 })

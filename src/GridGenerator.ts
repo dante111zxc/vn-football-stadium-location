@@ -17,13 +17,13 @@ export class GridGenerator {
 
   constructor(options: IGridOptions = {}) {
     this.options = {
-      defaultCellSize: options.defaultCellSize ?? 40,
-      urbanCellSize: options.urbanCellSize ?? 10,
-      suburbanCellSize: options.suburbanCellSize ?? 10,
-      ruralCellSize: options.ruralCellSize ?? 20,
-      overlap: options.overlap ?? 10, // 10% overlap
-      minRadius: options.minRadius ?? 1.5,
-      maxRadius: options.maxRadius ?? 5,
+      defaultCellSize: options.defaultCellSize ?? 20,
+      urbanCellSize: options.urbanCellSize ?? 8,
+      suburbanCellSize: options.suburbanCellSize ?? 12,
+      ruralCellSize: options.ruralCellSize ?? 18,
+      overlap: options.overlap ?? 5,
+      minRadius: options.minRadius ?? 5,
+      maxRadius: options.maxRadius ?? 12,
     }
   }
 
